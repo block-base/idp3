@@ -11,7 +11,9 @@
     "build": "run-p build:*",
     "build:app": "yarn workspace @idp3/app build",
     "lint": "run-p lint:*",
-    "lint:app": "yarn workspace @idp3/app lint"
+    "lint:app": "yarn workspace @idp3/app lint",
+    "dev": "run-p dev:*",
+    "dev:app": "yarn workspace @idp3/app dev"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
