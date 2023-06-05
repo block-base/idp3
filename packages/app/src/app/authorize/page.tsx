@@ -3,8 +3,7 @@ import { Authorize, AuthorizeProps } from "@/components/Authorize";
 type SearchParams = AuthorizeProps;
 
 const validate = (searchParams: SearchParams) => {
-  // TODO: validate
-  console.log(searchParams);
+  // TODO: implement
 };
 
 export default function Page({ searchParams }: { searchParams: SearchParams }) {

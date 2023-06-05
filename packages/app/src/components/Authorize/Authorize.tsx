@@ -16,8 +16,12 @@ export const Authorize = (props: AuthorizeProps) => {
       <div>
         <button
           onClick={() => {
+            // TOOD: implement jwt with metamask
+
+            const idToken =
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
             const searchParam = new URLSearchParams({
-              id_token: "id_token",
+              id_token: idToken,
             });
             if (props.response_mode === "post") {
               fetch(props.redirect_uri, {
