@@ -1,4 +1,4 @@
-import * as jose from "jose";
+// import * as jose from "jose";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,10 +9,10 @@ export async function GET(request: Request) {
   }
 
   console.log("idToken", idToken);
-  const header = jose.decodeProtectedHeader(idToken);
+  // const header = jose.decodeProtectedHeader(idToken);
 
-  // TODO: implement dynamic mapping of issuer
-  console.log("header", header);
+  // // TODO: implement dynamic mapping of issuer
+  // console.log("header", header);
 
   return new Response("verified", {
     status: 200,

@@ -1,4 +1,5 @@
-import { Authorize, AuthorizeProps } from "@/components/Authorize";
+import { AuthorizeProps } from "@/components/organisms/Authorize";
+import { AuthorizeTemplate } from "@/components/templates/Authorize";
 
 type SearchParams = AuthorizeProps;
 
@@ -10,7 +11,7 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
   validate(searchParams);
   return (
     <main>
-      <Authorize {...searchParams}></Authorize>
+      <AuthorizeTemplate authorizeProp={searchParams} />
     </main>
   );
 }
