@@ -5,15 +5,16 @@ import { SignIn } from "@/components/Wallet";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const didKeyDriver = require("did-method-key").driver();
 
-export interface CreateSelfIssuedTokenAndCallbackProps {
+export interface HandleAuthorizationRequestProps {
   redirect_uri: string;
   response_mode: string;
   nonce: string;
+  className?: string;
 }
 
-export const CreateSelfIssuedTokenAndCallback = (props: CreateSelfIssuedTokenAndCallbackProps) => {
+export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProps) => {
   return (
-    <section>
+    <section className={props.className}>
       <SignIn
         onSuccess={async (signature) => {
           console.log(signature);

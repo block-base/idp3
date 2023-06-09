@@ -1,2 +1,3 @@
-export * from "./CreateSelfIssuedTokenAndCallback";
-export * from "./StartAuthorization";
+export * from "./HandleAuthorizationRequest";
+export * from "./MoveToAuthorizationDemo";
+export * from "./StartAuthorizationDemo";

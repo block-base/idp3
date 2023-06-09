@@ -7,12 +7,13 @@ import { QueryProvider, WalletProvider } from "@/providers";
 
 export interface SignInProps {
   onSuccess?: (data: string) => void;
+  className?: string;
 }
 
 export const _SignIn = (props: SignInProps) => {
   const { signMessage } = useSignMessage({ onSuccess: props.onSuccess });
   return (
-    <section>
+    <section className={props.className}>
       <Button onClick={() => signMessage({ message: "sign in" })}>Sign</Button>
     </section>
   );

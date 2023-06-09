@@ -4,16 +4,20 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/Button";
 
-export const Home = () => {
+export interface MoveToAuthorizationDemoProps {
+  className?: string;
+}
+
+export const MoveToAuthorizationDemo = (props: MoveToAuthorizationDemoProps) => {
   const router = useRouter();
   return (
-    <section>
+    <section className={props.className}>
       <Button
         onClick={() => {
           router.push("./demo");
         }}
       >
-        Demo
+        Move to Authorization Demo
       </Button>
     </section>
   );

@@ -1,9 +1,10 @@
-import { Home } from "@/components/Home";
+import { HomeLayout } from "@/components/Layout";
+import { MoveToAuthorizationDemo } from "@/components/SIOP";
 
 export default function Page() {
   return (
-    <main>
-      <Home />
-    </main>
+    <HomeLayout title={"IdP3"} tagLine={"Decentralized Identity Aggregator"} className={"bg-black text-white"}>
+      <MoveToAuthorizationDemo />
+    </HomeLayout>
   );
 }

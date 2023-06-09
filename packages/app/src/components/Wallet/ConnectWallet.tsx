@@ -4,18 +4,22 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import { WalletProvider } from "@/providers";
 
-export const _ConnectWallet = () => {
+export interface ConnectWalletProps {
+  className?: string;
+}
+
+export const _ConnectWallet = (props: ConnectWalletProps) => {
   return (
-    <section>
+    <section className={props.className}>
       <ConnectButton />
     </section>
   );
 };
 
-export const ConnectWallet = () => {
+export const ConnectWallet = (props: ConnectWalletProps) => {
   return (
     <WalletProvider>
-      <_ConnectWallet />
+      <_ConnectWallet {...props} />
     </WalletProvider>
   );
 };
