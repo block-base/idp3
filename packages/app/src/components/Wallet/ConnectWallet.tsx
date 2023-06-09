@@ -5,7 +5,11 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { WalletProvider } from "@/providers";
 
 export const _ConnectWallet = () => {
-  return <ConnectButton />;
+  return (
+    <section>
+      <ConnectButton />
+    </section>
+  );
 };
 
 export const ConnectWallet = () => {

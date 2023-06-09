@@ -2,22 +2,27 @@
 
 import { useSignMessage } from "wagmi";
 
+import { Button } from "@/components/Button";
 import { QueryProvider, WalletProvider } from "@/providers";
 
-export interface SignMessageProps {
+export interface SignInProps {
   onSuccess?: (data: string) => void;
 }
 
-export const _SignMessage = (props: SignMessageProps) => {
+export const _SignIn = (props: SignInProps) => {
   const { signMessage } = useSignMessage({ onSuccess: props.onSuccess });
-  return <button onClick={() => signMessage({ message: "message" })}>Sign</button>;
+  return (
+    <section>
+      <Button onClick={() => signMessage({ message: "sign in" })}>Sign</Button>
+    </section>
+  );
 };
 
-export const SignMessage = (props: SignMessageProps) => {
+export const SignIn = (props: SignInProps) => {
   return (
     <QueryProvider>
       <WalletProvider>
-        <_SignMessage {...props} />
+        <_SignIn {...props} />
       </WalletProvider>
     </QueryProvider>
   );
