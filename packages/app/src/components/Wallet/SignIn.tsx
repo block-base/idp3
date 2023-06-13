@@ -14,7 +14,7 @@ export const _SignIn = (props: SignInProps) => {
   const { signMessage } = useSignMessage({ onSuccess: props.onSuccess });
   return (
     <section className={props.className}>
-      <Button onClick={() => signMessage({ message: "sign in" })}>Sign</Button>
+      <Button onClick={() => signMessage({ message: "create vp here" })}>Sign</Button>
     </section>
   );
 };
