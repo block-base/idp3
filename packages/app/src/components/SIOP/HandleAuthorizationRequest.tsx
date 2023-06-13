@@ -12,6 +12,9 @@ export interface HandleAuthorizationRequestProps {
   className?: string;
 }
 
+// TODO: Create Verifiable Presentation
+// TODO: Create ID Token
+
 export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProps) => {
   return (
     <section className={props.className}>

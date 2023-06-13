@@ -8,6 +8,8 @@ export interface StartAuthorizationDemoProps {
   className?: string;
 }
 
+// TODO: get id token config and handle authorize request
+// TODO: send presentation definition to the authorization app
 export const StartAuthorizationDemo = (props: StartAuthorizationDemoProps) => {
   const router = useRouter();
   return (

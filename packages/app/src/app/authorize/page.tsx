@@ -5,12 +5,9 @@ import { AvailableCredentials, ConnectWallet } from "@/components/Wallet";
 
 type SearchParams = HandleAuthorizationRequestProps;
 
-const validate = (searchParams: SearchParams) => {
-  // TODO: implement
-};
+// TODO: get presentation definition and handle it
 
 export default function Page({ searchParams }: { searchParams: SearchParams }) {
-  validate(searchParams);
   return (
     <HomeLayout title={"IdP3 Authorization"} tagLine={"Aggregate Your Credential"} className={"bg-white text-black"}>
       <div className="w-full mb-4">

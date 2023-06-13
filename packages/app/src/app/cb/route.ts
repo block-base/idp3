@@ -12,7 +12,8 @@ export async function GET(request: Request) {
   console.log("idToken", idToken);
   // const header = jose.decodeProtectedHeader(idToken);
 
-  // // TODO: implement dynamic mapping of issuer
+  // TODO: verify id token
+  // TODO: verify vp token
   // console.log("header", header);
   return NextResponse.json({ verified: true }, { status: 200 });
 }
