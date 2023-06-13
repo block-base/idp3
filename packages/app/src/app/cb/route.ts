@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 // import * as jose from "jose";
 
 export async function GET(request: Request) {
@@ -13,8 +14,5 @@ export async function GET(request: Request) {
 
   // // TODO: implement dynamic mapping of issuer
   // console.log("header", header);
-
-  return new Response("verified", {
-    status: 200,
-  });
+  return NextResponse.json({ verified: true }, { status: 200 });
 }
