@@ -13,7 +13,6 @@ export interface HandleAuthorizationRequestProps {
 }
 
 // TODO: Create Verifiable Presentation
-// TODO: Create ID Token
 
 export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProps) => {
   return (
@@ -21,12 +20,16 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
       <SignIn
         onSuccess={async (signature) => {
           console.log(signature);
+
           const didDocument = await didKeyDriver.generate();
           console.log("didDocument", didDocument);
 
-          const idToken = signature;
+          // TODO: Create ID Token
+          const idToken = "";
+
           const searchParam = new URLSearchParams({
             id_token: idToken,
+            vp_token: signature,
           });
           if (props.response_mode === "post") {
             fetch(props.redirect_uri, {
