@@ -2,6 +2,7 @@ export interface ButtonProps {
   className?: string;
   children?: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const Button = (props: ButtonProps) => {
