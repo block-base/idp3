@@ -1,9 +1,10 @@
 "use client";
 
+import * as ionjs from "@decentralized-identity/ion-sdk/dist/lib/index";
+
 import { SignIn } from "@/components/Wallet";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const didKeyDriver = require("did-method-key").driver();
+import { Signer } from "../../lib/signer";
 
 export interface HandleAuthorizationRequestProps {
   redirect_uri: string;
@@ -20,13 +21,17 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
       <SignIn
         onSuccess={async (signature) => {
           console.log(signature);
+          const [publicKey, privateKey] = await ionjs.IonKey.generateEs256kOperationKeyPair();
 
-          const didDocument = await didKeyDriver.generate();
-          console.log("didDocument", didDocument);
+          const signer = new Signer();
+          await signer.init(publicKey, privateKey);
 
-          // TODO: Create ID Token
-          const idToken = "";
+          // SIOP
+          const idToken = await signer.siop({ aud: props.redirect_uri, nonce: props.nonce });
 
+          // TODO: Create VP
+          // const vp = await signer.createVP({ vcs:[vc,delegateVc] }, "jwt_vp_json");
+          console.log(idToken);
           const searchParam = new URLSearchParams({
             id_token: idToken,
             vp_token: signature,
