@@ -11,6 +11,7 @@ export interface HandleAuthorizationRequestProps {
   response_mode: string;
   nonce: string;
   className?: string;
+  presentation_definition: string;
 }
 
 // TODO: Create Verifiable Presentation
@@ -20,6 +21,7 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
     <section className={props.className}>
       <SignIn
         onSuccess={async (signature) => {
+          const delegateVc = signature;
           console.log(signature);
           const [publicKey, privateKey] = await ionjs.IonKey.generateEs256kOperationKeyPair();
 
@@ -29,12 +31,30 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
           // SIOP
           const idToken = await signer.siop({ aud: props.redirect_uri, nonce: props.nonce });
 
-          // TODO: Create VP
-          // const vp = await signer.createVP({ vcs:[vc,delegateVc] }, "jwt_vp_json");
+          const presentationDefinition = JSON.parse(props.presentation_definition);
+
+          // TODO: Add SelectedVC
+          const vcs = [delegateVc];
+
+          const { vp, descriptorMap } = await signer.createVP(
+            {
+              vcs,
+              aud: props.redirect_uri,
+              nonce: props.nonce,
+            },
+            "jwt_vp_json"
+          );
+
+          const presentationSubmission = {
+            definition_id: presentationDefinition.id,
+            id: "example_jwt_vc_presentation_submission",
+            descriptor_map: descriptorMap,
+          };
 
           const searchParam = new URLSearchParams({
             id_token: idToken,
-            vp_token: signature,
+            vp_token: vp,
+            presentation_submission: JSON.stringify(presentationSubmission),
           });
           // if (props.response_mode === "post") {
           //   fetch(props.redirect_uri, {

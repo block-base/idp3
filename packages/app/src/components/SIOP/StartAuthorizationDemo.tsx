@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/Button";
 
+import presentationDefinition from "../../config/presentation-definition.json";
+
 export interface StartAuthorizationDemoProps {
   className?: string;
 }
@@ -29,7 +31,7 @@ export const StartAuthorizationDemo = (props: StartAuthorizationDemoProps) => {
       // App callback url
       url.searchParams.append("redirect_uri", "http://localhost:3000/cb");
       // TODO: add presentation definition
-      url.searchParams.append("presentation_definition", "...");
+      url.searchParams.append("presentation_definition", JSON.stringify(presentationDefinition));
 
       const nonce = btoa(String.fromCharCode(...Array.from(window.crypto.getRandomValues(new Uint8Array(16)))));
       localStorage.setItem("nonce", nonce);
