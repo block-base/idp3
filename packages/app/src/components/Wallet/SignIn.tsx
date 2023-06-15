@@ -1,9 +1,7 @@
-"use client";
-
 import { useWalletClient } from "wagmi";
 
 import { Button } from "@/components/Button";
-import { QueryProvider, WalletProvider } from "@/providers";
+import { useCredentials } from "@/hooks/useCredentials";
 
 export interface SignInProps {
   // TODO: define type
@@ -11,8 +9,10 @@ export interface SignInProps {
   className?: string;
 }
 
-export const _SignIn = (props: SignInProps) => {
+export const SignIn = (props: SignInProps) => {
   const { data: walletClient } = useWalletClient();
+  const { credentials } = useCredentials();
+
   return (
     <section className={props.className}>
       <Button
@@ -27,6 +27,8 @@ export const _SignIn = (props: SignInProps) => {
           // TODO: replace with pairwise did
           const sub = "did:ion:<identifier>";
 
+          // TODO: delegate
+          console.log(credentials);
           const message = {
             "@context": ["https://www.w3.org/2018/credentials/v1"],
             id: "id", // TODO: create vc id
@@ -82,15 +84,5 @@ export const _SignIn = (props: SignInProps) => {
         Sign
       </Button>
     </section>
-  );
-};
-
-export const SignIn = (props: SignInProps) => {
-  return (
-    <QueryProvider>
-      <WalletProvider>
-        <_SignIn {...props} />
-      </WalletProvider>
-    </QueryProvider>
   );
 };
