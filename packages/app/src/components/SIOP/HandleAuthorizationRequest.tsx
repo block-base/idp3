@@ -31,22 +31,22 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
 
           // TODO: Create VP
           // const vp = await signer.createVP({ vcs:[vc,delegateVc] }, "jwt_vp_json");
-          console.log(idToken);
+
           const searchParam = new URLSearchParams({
             id_token: idToken,
             vp_token: signature,
           });
-          if (props.response_mode === "post") {
-            fetch(props.redirect_uri, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              body: searchParam,
-            });
-          } else {
-            window.location.assign(`${props.redirect_uri}?${searchParam.toString()}`);
-          }
+          // if (props.response_mode === "post") {
+          //   fetch(props.redirect_uri, {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/x-www-form-urlencoded",
+          //     },
+          //     body: searchParam,
+          //   });
+          // } else {
+          //   window.location.assign(`${props.redirect_uri}?${searchParam.toString()}`);
+          // }
         }}
       />
     </section>
