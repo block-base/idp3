@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 
-import OIDConfig from "../../../config/oid-config.json";
+import openidConfiguration from "../../../config/openid-configuration.json";
 
 export async function GET() {
-  const config = OIDConfig;
-  return NextResponse.json(config, {
+  return NextResponse.json(openidConfiguration, {
     status: 200,
     headers: {
       "Access-Control-Allow-Origin": "*",

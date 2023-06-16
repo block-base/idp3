@@ -1,11 +1,13 @@
-export interface HomeLayoutProps {
+"use client";
+
+export interface LayoutProps {
   title: string;
   tagLine?: string;
   className?: string;
   children: React.ReactNode;
 }
 
-export const HomeLayout = (props: HomeLayoutProps) => {
+export const Layout = (props: LayoutProps) => {
   return (
     <main>
       <div className={`h-screen flex flex-col items-center justify-center ${props.className}`}>

@@ -1,7 +1,6 @@
-import * as ionjs from "@decentralized-identity/ion-sdk/dist/lib/index";
+import * as ionjs from "@decentralized-identity/ion-sdk";
 import { JWK } from "jose";
 import moment from "moment";
-import { v4 as uuidv4 } from "uuid";
 
 export interface KeyPair {
   publicJwk: JWK;
@@ -14,7 +13,7 @@ export interface SiopOptions {
 }
 
 export interface VPOptions {
-  vcs: string[];
+  vcs: any[];
   aud: string;
   nonce?: string;
 }

@@ -48,8 +48,8 @@ export default function Page() {
                   ],
                 };
                 const authorizationUri = await createAuthorizationUri(
-                  "http://localhost:3000/.well-known/openid-configuration",
-                  "http://localhost:3001/cb",
+                  `${process.env.NEXT_PUBLIC_APP_URL}/.well-known/openid-configuration`,
+                  `${process.env.NEXT_PUBLIC_DEMO_URL}/cb`,
                   presentationDefinition
                 );
                 router.push(authorizationUri);
