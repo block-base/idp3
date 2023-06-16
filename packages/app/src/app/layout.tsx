@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 
 import { CredentialsProvider } from "@/providers/CredentialsProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
-import { SigningKeyProvider } from "@/providers/SigningKeyProvider";
+import { SiopProvider } from "@/providers/SiopProvider";
 import { WalletProvider } from "@/providers/WalletProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,9 +20,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body className={inter.className}>
         <QueryProvider>
           <WalletProvider>
-            <SigningKeyProvider>
+            <SiopProvider>
               <CredentialsProvider>{children}</CredentialsProvider>
-            </SigningKeyProvider>
+            </SiopProvider>
           </WalletProvider>
         </QueryProvider>
       </body>

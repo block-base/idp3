@@ -1,6 +1,5 @@
 "use client";
 
-import * as ionjs from "@decentralized-identity/ion-sdk";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect } from "react";
 import { useAccount, useWalletClient } from "wagmi";
@@ -8,8 +7,7 @@ import { useAccount, useWalletClient } from "wagmi";
 import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
 import { useCredentials } from "@/hooks/useCredentials";
-import { useSigningKey } from "@/hooks/useSigningKey";
-import { Signer } from "@/lib/signer";
+import { useSiop } from "@/hooks/useSiop";
 
 interface SearchParams {
   redirect_uri: string;
@@ -25,18 +23,18 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { credentials, setCredentials } = useCredentials();
-  const { signingKey } = useSigningKey();
+  const { siop } = useSiop();
 
-  // useEffect(() => {
-  //   if (!address) {
-  //     return;
-  //   }
-  //   fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/vc?address=${address}`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setCredentials(data);
-  //     });
-  // }, [address, setCredentials]);
+  useEffect(() => {
+    if (!address) {
+      return;
+    }
+    fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/vc?address=${address}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setCredentials(data);
+      });
+  }, [address, setCredentials]);
 
   return (
     <Layout title={"IdP3 Authorization"} tagLine={"Aggregate Your Credential"} className={"bg-white text-black"}>
@@ -58,7 +56,7 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
         <h2 className={"text-lg font-bold mb-2"}>Handle Authorization Request</h2>
         <Button
           onClick={async () => {
-            if (!walletClient || !signingKey) {
+            if (!walletClient || !siop) {
               return;
             }
             const [address] = await walletClient.getAddresses();
@@ -119,19 +117,14 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
               proof,
             };
 
-            const { publicKey, privateKey } = signingKey;
-            const signer = new Signer();
-            await signer.init(publicKey, privateKey);
-
             // SIOP
-            const idToken = await signer.siop({ aud: searchParams.redirect_uri, nonce: searchParams.nonce });
-
+            const idToken = await siop.createIdToken({ aud: searchParams.redirect_uri, nonce: searchParams.nonce });
             const presentationDefinition = JSON.parse(searchParams.presentation_definition);
 
             // TODO: add selected vc
             const vcs = [vc];
 
-            const { vp, descriptorMap } = await signer.createVP(
+            const { vp, descriptorMap } = await siop.createVpToken(
               {
                 vcs,
                 aud: searchParams.redirect_uri,

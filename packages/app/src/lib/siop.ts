@@ -1,4 +1,4 @@
-import * as ionjs from "@decentralized-identity/ion-sdk";
+import { IonDid, IonDocumentModel, IonPublicKeyPurpose, JwkEs256k, LocalSigner } from "@decentralized-identity/ion-sdk";
 import { JWK } from "jose";
 import moment from "moment";
 
@@ -31,44 +31,44 @@ export interface DescriptorMap {
 const DID_ION_KEY_ID = "signingKey";
 const SIOP_VALIDITY_IN_MINUTES = 30;
 
-export class Signer {
+export class Siop {
   did: string | undefined = undefined;
 
-  recoveryKey: ionjs.JwkEs256k | undefined = undefined;
-  updateKey: ionjs.JwkEs256k | undefined = undefined;
+  recoveryKey: JwkEs256k | undefined = undefined;
+  updateKey: JwkEs256k | undefined = undefined;
 
-  privateKeyJwk: ionjs.JwkEs256k | undefined = undefined;
-  publicKeyJwk: ionjs.JwkEs256k | undefined = undefined;
+  privateKeyJwk: JwkEs256k | undefined = undefined;
+  publicKeyJwk: JwkEs256k | undefined = undefined;
 
-  init = async (publicKeyJwk: ionjs.JwkEs256k, privateKeyJwk: ionjs.JwkEs256k): Promise<void> => {
+  init = async (publicKeyJwk: JwkEs256k, privateKeyJwk: JwkEs256k): Promise<void> => {
     this.privateKeyJwk = privateKeyJwk;
     this.publicKeyJwk = publicKeyJwk;
 
     this.recoveryKey = publicKeyJwk;
     this.updateKey = this.recoveryKey;
 
-    const document: ionjs.IonDocumentModel = {
+    const document: IonDocumentModel = {
       publicKeys: [
         {
           id: `signingKey`,
           type: "EcdsaSecp256k1VerificationKey2019",
           publicKeyJwk: this.publicKeyJwk,
-          purposes: [ionjs.IonPublicKeyPurpose.Authentication],
+          purposes: [IonPublicKeyPurpose.Authentication],
         },
       ],
     };
 
-    this.did = await ionjs.IonDid.createLongFormDid({
+    this.did = await IonDid.createLongFormDid({
       recoveryKey: this.recoveryKey,
       updateKey: this.updateKey,
       document,
     });
   };
 
-  siop = async (options: SiopOptions): Promise<string> => {
+  createIdToken = async (options: SiopOptions): Promise<string> => {
     if (!this.privateKeyJwk) throw new Error("privateJwk is not initialized");
     if (!this.did) throw new Error("did is not initialized");
-    const signer = ionjs.LocalSigner.create(this.privateKeyJwk);
+    const signer = LocalSigner.create(this.privateKeyJwk);
     return await signer.sign(
       {
         typ: "JWT",
@@ -85,10 +85,10 @@ export class Signer {
     );
   };
 
-  createVP = async (options: VPOptions, format: "ldp_vp" | "jwt_vp_json") => {
+  createVpToken = async (options: VPOptions, format: "ldp_vp" | "jwt_vp_json") => {
     if (!this.privateKeyJwk) throw new Error("privateJwk is not initialized");
     if (!this.did) throw new Error("did is not initialized");
-    const signer = ionjs.LocalSigner.create(this.privateKeyJwk);
+    const signer = LocalSigner.create(this.privateKeyJwk);
     const descriptorMap: DescriptorMap = {
       id: "ID card with constraints",
       format,
