@@ -56,17 +56,17 @@ export const HandleAuthorizationRequest = (props: HandleAuthorizationRequestProp
             vp_token: vp,
             presentation_submission: JSON.stringify(presentationSubmission),
           });
-          // if (props.response_mode === "post") {
-          //   fetch(props.redirect_uri, {
-          //     method: "POST",
-          //     headers: {
-          //       "Content-Type": "application/x-www-form-urlencoded",
-          //     },
-          //     body: searchParam,
-          //   });
-          // } else {
-          //   window.location.assign(`${props.redirect_uri}?${searchParam.toString()}`);
-          // }
+          if (props.response_mode === "post") {
+            fetch(props.redirect_uri, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: searchParam,
+            });
+          } else {
+            window.location.assign(`${props.redirect_uri}?${searchParam.toString()}`);
+          }
         }}
       />
     </section>

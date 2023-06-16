@@ -26,10 +26,12 @@ export const StartAuthorizationDemo = (props: StartAuthorizationDemoProps) => {
       url.searchParams.append("response_type", "id_token vp_token");
       url.searchParams.append("scope", "openid");
       url.searchParams.append("id_token_type", "subject_signed");
+      url.searchParams.append("response_mode", "post");
+
       // App callback url
-      url.searchParams.append("client_id", "http://localhost:3000/cb");
+      url.searchParams.append("client_id", "http://localhost:3000/api/cb");
       // App callback url
-      url.searchParams.append("redirect_uri", "http://localhost:3000/cb");
+      url.searchParams.append("redirect_uri", "http://localhost:3000/api/cb");
       // TODO: add presentation definition
       url.searchParams.append("presentation_definition", JSON.stringify(presentationDefinition));
 
@@ -37,7 +39,7 @@ export const StartAuthorizationDemo = (props: StartAuthorizationDemoProps) => {
       localStorage.setItem("nonce", nonce);
       url.searchParams.append("nonce", nonce);
 
-      setAuthorizeRequestUrl(oidConfig.authorization_endpoint);
+      setAuthorizeRequestUrl(url.toString());
       console.log("StartAuthorizationDemo", url.toString());
     })();
   }, []);
