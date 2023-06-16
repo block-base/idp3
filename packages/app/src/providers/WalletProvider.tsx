@@ -8,8 +8,7 @@ import { publicProvider } from "wagmi/providers/public";
 const { chains, publicClient } = configureChains([mainnet], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
+  appName: "IdP3",
   chains,
 });
 

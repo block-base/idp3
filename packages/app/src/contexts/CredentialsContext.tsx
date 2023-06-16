@@ -7,6 +7,7 @@ export const CredentialsContext = createContext<{
   setCredentials: Dispatch<SetStateAction<string[]>>;
 }>({
   credentials: [],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setCredentials: () => {},
+  setCredentials: () => {
+    throw new Error("setCredentials was called without a Provider");
+  },
 });

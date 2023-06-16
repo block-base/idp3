@@ -8,6 +8,7 @@ import { useAccount, useWalletClient } from "wagmi";
 import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
 import { useCredentials } from "@/hooks/useCredentials";
+import { useSigningKey } from "@/hooks/useSigningKey";
 import { Signer } from "@/lib/signer";
 
 interface SearchParams {
@@ -24,17 +25,18 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { credentials, setCredentials } = useCredentials();
+  const { signingKey } = useSigningKey();
 
-  useEffect(() => {
-    if (!address) {
-      return;
-    }
-    fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/vc?address=${address}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCredentials(data);
-      });
-  }, [address, setCredentials]);
+  // useEffect(() => {
+  //   if (!address) {
+  //     return;
+  //   }
+  //   fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/vc?address=${address}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setCredentials(data);
+  //     });
+  // }, [address, setCredentials]);
 
   return (
     <Layout title={"IdP3 Authorization"} tagLine={"Aggregate Your Credential"} className={"bg-white text-black"}>
@@ -56,7 +58,7 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
         <h2 className={"text-lg font-bold mb-2"}>Handle Authorization Request</h2>
         <Button
           onClick={async () => {
-            if (!walletClient) {
+            if (!walletClient || !signingKey) {
               return;
             }
             const [address] = await walletClient.getAddresses();
@@ -67,7 +69,6 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
             const sub = "did:ion:<identifier>";
 
             // TODO: delegate
-            console.log(credentials);
             const message = {
               "@context": ["https://www.w3.org/2018/credentials/v1"],
               id: "id", // TODO: create vc id
@@ -118,8 +119,7 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
               proof,
             };
 
-            console.log(signature);
-            const [publicKey, privateKey] = await ionjs.IonKey.generateEs256kOperationKeyPair();
+            const { publicKey, privateKey } = signingKey;
             const signer = new Signer();
             await signer.init(publicKey, privateKey);
 
