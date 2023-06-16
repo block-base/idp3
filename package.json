@@ -8,12 +8,18 @@
   ],
   "scripts": {
     "prepare": "husky install",
+    "dev": "run-p dev:*",
+    "dev:app": "yarn workspace @idp3/app dev -p 3000",
+    "dev:example": "yarn workspace @idp3/example dev -p 3001",
+    "dev:sdk": "yarn workspace @idp3/sdk dev",
     "build": "run-p build:*",
     "build:app": "yarn workspace @idp3/app build",
+    "build:example": "yarn workspace @idp3/example build",
+    "build:sdk": "yarn workspace @idp3/sdk build",
     "lint": "run-p lint:*",
     "lint:app": "yarn workspace @idp3/app lint",
-    "dev": "run-p dev:*",
-    "dev:app": "yarn workspace @idp3/app dev"
+    "lint:example": "yarn workspace @idp3/example lint",
+    "lint:sdk": "yarn workspace @idp3/sdk lint"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
