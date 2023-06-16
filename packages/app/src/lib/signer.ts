@@ -15,8 +15,18 @@ export interface SiopOptions {
 
 export interface VPOptions {
   vcs: string[];
-  verifierDID: string;
+  aud: string;
   nonce?: string;
+}
+
+export interface DescriptorMap {
+  id: string;
+  format: string;
+  path: string;
+  path_nested: {
+    format: string;
+    path: string;
+  }[];
 }
 
 const DID_ION_KEY_ID = "signingKey";
@@ -76,13 +86,33 @@ export class Signer {
     );
   };
 
-  createVP = async (options: VPOptions, format: "ldp_vp" | "jwt_vp_json"): Promise<string | any> => {
+  createVP = async (options: VPOptions, format: "ldp_vp" | "jwt_vp_json") => {
     if (!this.privateKeyJwk) throw new Error("privateJwk is not initialized");
     if (!this.did) throw new Error("did is not initialized");
     const signer = ionjs.LocalSigner.create(this.privateKeyJwk);
+    const descriptorMap: DescriptorMap = {
+      id: "ID card with constraints",
+      format,
+      path: "$",
+      path_nested: [],
+    };
+
+    options.vcs.forEach((vc, index) => {
+      if (typeof vc === "string") {
+        descriptorMap.path_nested.push({
+          format: "jwt_vc_json",
+          path: `$.verifiableCredential[${index}]`,
+        });
+      } else {
+        descriptorMap.path_nested.push({
+          format: "ldp_vc",
+          path: `$.verifiableCredential[${index}]`,
+        });
+      }
+    });
 
     if (format === "jwt_vp_json") {
-      return await signer.sign(
+      const vp = await signer.sign(
         {
           typ: "JWT",
           alg: "ES256K",
@@ -91,24 +121,24 @@ export class Signer {
         {
           iat: moment().unix(),
           exp: moment().add(SIOP_VALIDITY_IN_MINUTES, "minutes").unix(),
-          nbf: moment().unix(),
-          jti: uuidv4().toUpperCase(),
           vp: {
             "@context": ["https://www.w3.org/2018/credentials/v1"],
             type: ["VerifiablePresentation"],
             verifiableCredential: options.vcs,
           },
           iss: this.did,
-          aud: options.verifierDID,
+          aud: options.aud,
           nonce: options.nonce,
         }
       );
-    }
-    if (format === "ldp_vp") {
+      return { vp, descriptorMap };
+    } else if (format === "ldp_vp") {
       // TODO: sign
       // create json-ld verifiable presentation
-      const vp = {};
-      return vp;
+      const vp = "";
+      return { vp, descriptorMap };
+    } else {
+      throw new Error("format is invalid");
     }
   };
 }
