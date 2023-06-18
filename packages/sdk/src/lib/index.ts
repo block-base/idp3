@@ -4,7 +4,7 @@ import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 
 import { PresentationDefinition } from "../types";
 
-export const verifyJwtWithDid = async (idToken: string) => {
+export const verifyIdToken = async (idToken: string) => {
   const { kid } = decodeProtectedHeader(idToken);
   if (!kid) {
     throw new Error("kid is undefined");
@@ -15,10 +15,21 @@ export const verifyJwtWithDid = async (idToken: string) => {
   return true;
 };
 
+// TODO: implement
+export const verifyVpToken = async (vpToken: string) => {
+  return true;
+};
+
+export const createNonce = () => {
+  const nonce = base64url.encode(randomBytes(8));
+  return nonce;
+};
+
 export const createAuthorizationUri = async (
   oidConfigUri: string,
   callBackUri: string,
-  presentationDefinition: PresentationDefinition
+  presentationDefinition: PresentationDefinition,
+  nonce: string
 ) => {
   const oidConfig = await fetch(oidConfigUri).then((res) => res.json());
   const url = new URL(oidConfig.authorization_endpoint);
@@ -29,8 +40,6 @@ export const createAuthorizationUri = async (
   url.searchParams.append("client_id", callBackUri);
   url.searchParams.append("redirect_uri", callBackUri);
   url.searchParams.append("presentation_definition", JSON.stringify(presentationDefinition));
-  const nonce = base64url.encode(randomBytes(8));
-  localStorage.setItem("nonce", nonce);
   url.searchParams.append("nonce", nonce);
   return url.toString();
 };

@@ -94,8 +94,6 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
             const verificationMethod = `${issuer}#controller`;
             const sub = siop.did;
 
-            console.log(selectedCredential);
-
             const message = {
               "@context": ["https://www.w3.org/2018/credentials/v1"],
               id: "id", // TODO: create vc id
@@ -123,7 +121,6 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
               ],
               CredentialSubject: [
                 { name: "id", type: "string" },
-                { name: "hash", type: "string" },
                 { name: "provider", type: "string" },
               ],
             };
@@ -175,18 +172,16 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
               id_token: idToken,
               vp_token: vp,
               presentation_submission: JSON.stringify(presentationSubmission),
+              nonce: searchParams.nonce,
             });
-            if (searchParams.response_mode === "post") {
-              fetch(searchParams.redirect_uri, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: searchParam,
-              });
-            } else {
-              window.location.assign(`${searchParams.redirect_uri}?${searchParam.toString()}`);
-            }
+            await fetch(searchParams.redirect_uri, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: searchParam,
+            });
+            window.close();
           }}
         >
           Authorize
