@@ -1,12 +1,10 @@
 # idp3
 
-IdP with web3 wallet
-
 ![top](./docs/img/top.png)
 
 ## Description
 
-IdP3 is a fully decentralized solution for authorization, leveraging SIOPv2 and OID4VP. This system empowers users to turn their wallets into Self-Issued ID Token Providers (SIOPs) and attach credentials as Verifiable Presentations.
+IdP3 is a fully decentralized solution for authorization, leveraging SIOPv2 and OID4VP. This system empowers users to turn their wallets into Self-Issued ID Token Providers (SIOP) and attach credentials as Verifiable Presentations.
 
 ## Demo App
 
@@ -37,6 +35,14 @@ The scenario discussed below is compatible with W3C Verifiable Credentials.
 https://www.w3.org/TR/vc-data-model/#subject-passes-a-verifiable-credential-to-someone-else
 
 In our model, the Decentralized Identifier (DID) that creates the ID token is a pairwise DID. It is used only for the connection, while the original verifiable credential holder is the user's Web3 wallet.
+
+### Verification of Verifiable Credentials from a Web3 Wallet
+
+Web3 wallet signatures add a prefix to the message, which complicates the creation of JSON Web Tokens (JWTs). This issue presents a significant hurdle in using a Web3 wallet for authorization, and as a result, SIWE necessitates a separate signing key. However, a potential solution is currently under discussion by the Ceramic team.
+
+https://w3c-ccg.github.io/ethereum-eip712-signature-2021-spec/
+
+We utilize the signature verification algorithm suggested in the above link and generate verifiable presentations in the JSON-LD format.
 
 ## How It Build
 
