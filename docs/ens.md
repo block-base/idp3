@@ -2,9 +2,21 @@
 
 IdP3 has incorporated ENS credentials to demonstrate a broader range of actual use cases.
 
+![overview](./docs/img/overview.png)
+
+## Benefit
+
+TBD
+
 ## UI
 
 ![ens-ui](./img/ens-ui.png)
+
+## Implmentation
+
+### Data fetch
+
+https://github.com/block-base/idp3/blob/main/packages/app/src/app/authorize/page.tsx#L76
 
 ## Created Verifiable Credential
 

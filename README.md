@@ -10,6 +10,8 @@ IdP3 is a fully decentralized solution for authorization, leveraging SIOPv2 and 
 
 ## Demo App
 
+https://idp3.vercel.app/
+
 ## Demo Video
 
 TBD
@@ -17,6 +19,8 @@ TBD
 ## How It works
 
 IdP3 utilize SIOPv2 and OID4VP for the new way of authorization.
+
+![overview](./docs/img/overview.png)
 
 ### Difference from Sign In With Ethereum
 
