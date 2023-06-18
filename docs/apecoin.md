@@ -2,7 +2,7 @@
 
 IdP3 has incorporated ApeCoinDAO credentials to demonstrate a broader range of actual use cases.
 
-![overview](./docs/img/overview.png)
+![overview](./img/overview.png)
 
 ## UI
 
