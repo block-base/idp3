@@ -11,6 +11,7 @@ export interface CredentialSubject {
   hash: string;
   id: string;
   provider: string;
+  [key: string]: any;
 }
 
 export interface Credential {

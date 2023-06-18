@@ -2,10 +2,12 @@
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
 import { Button } from "@/components/Button";
+import { Checkbox } from "@/components/Checkbox";
 import { CredentialCard } from "@/components/CredentialCard";
 import { Layout } from "@/components/Layout";
 import { useCredentials } from "@/hooks/useCredentials";
@@ -31,11 +33,46 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
 
   const [ensName, setENSName] = useState("");
   const [ensAvatar, setENSAvatar] = useState("");
+  const [isIncludeENS, setIsIncludeENS] = useState(false);
 
+  const [apeCoinBalance, setApeCoinBalance] = useState("0");
+  const [isIncludeApeCoin, setIsIncludeApeCoin] = useState(false);
+
+  const fetchApeCoin = async (address: string) => {
+    const goerliRpcUri = "https://rpc.ankr.com/eth_goerli";
+    const apeCoinAddress = "0x328507dc29c95c170b56a1b3a758eb7a9e73455c";
+    const apeCoinAbi = [
+      {
+        constant: true,
+        inputs: [
+          {
+            name: "_owner",
+            type: "address",
+          },
+        ],
+        name: "balanceOf",
+        outputs: [
+          {
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        payable: false,
+        type: "function",
+      },
+    ];
+    const provider = new ethers.providers.JsonRpcProvider(goerliRpcUri);
+    const contract = new ethers.Contract(apeCoinAddress, apeCoinAbi, provider);
+    const balance = await contract.balanceOf(address);
+    return balance.toString();
+  };
+
+  // HackFS bounty integration
   useEffect(() => {
     if (!address) {
       return;
     }
+    // ENS
     fetchEnsName({ address }).then((name) => {
       if (!name) {
         return;
@@ -47,6 +84,9 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
         }
         setENSAvatar(avatar);
       });
+    });
+    fetchApeCoin(address).then((balance) => {
+      setApeCoinBalance(balance);
     });
   }, [address]);
 
@@ -81,29 +121,46 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
         <h2 className={"text-lg font-bold mb-2"}>Your Wallet</h2>
         <p className={"text-xs text-blue-400 mb-2"}>* Your web3 wallet which has verifiable credential</p>
         <div className={"mb-2"}>
-          <ConnectButton />
+          <ConnectButton accountStatus="avatar" />
         </div>
       </div>
       {isWalletConnected && (
-        <div className="w-full mb-4">
-          <h2 className={"text-lg font-bold mb-2"}>Profile</h2>
-          <p className={"text-xs text-blue-400 mb-2"}>* Your profile is fetched from ENS</p>
-          {ensName && (
-            <div className="mb-2">
-              <p className={"text-sm font-medium mb-1"}>Name</p>
-              <p className={"text-xs"}>{ensName}</p>
+        <>
+          <div className="w-full mb-4">
+            <h2 className={"text-lg font-bold mb-2"}>ENS Profile</h2>
+            <p className={"text-xs text-blue-400 mb-2"}>* Your profile is fetched from ENS</p>
+
+            {ensName && (
+              <div className="mb-2">
+                <p className={"text-sm font-medium mb-1"}>Name</p>
+                <p className={"text-xs"}>{ensName}</p>
+              </div>
+            )}
+            {ensAvatar && (
+              <div className="mb-2">
+                <p className={"text-sm font-medium mb-1"}>Avatar</p>
+                <p className={"text-xs"}>{ensAvatar}</p>
+              </div>
+            )}
+            <div className="py-2">
+              <Checkbox label="Inclue ENS credential" checked={isIncludeENS} setChecked={setIsIncludeENS} />
             </div>
-          )}
-          {ensAvatar && (
+          </div>
+          <div className="w-full mb-4">
+            <h2 className={"text-lg font-bold mb-2"}>ApeCoin</h2>
+            <p className={"text-xs text-blue-400 mb-2"}>* Balance on Goerli network</p>
             <div className="mb-2">
-              <p className={"text-sm font-medium mb-1"}>Avatar</p>
-              <p className={"text-xs"}>{ensAvatar}</p>
+              <p className={"text-sm font-medium mb-1"}>Balance</p>
+              <p className={"text-xs"}>{apeCoinBalance}</p>
             </div>
-          )}
-        </div>
+            <div className="py-2">
+              <Checkbox label="Inclue ApeCoin credential" checked={isIncludeApeCoin} setChecked={setIsIncludeApeCoin} />
+            </div>
+          </div>
+        </>
       )}
       <div className="w-full mb-4">
-        <h2 className={"text-lg font-bold mb-2"}>Available Credentials</h2>
+        <h2 className={"text-lg font-bold mb-2"}>Credentials on Ceramic</h2>
         <p className={"text-xs text-blue-400 mb-2"}>* integrated with Gitcoin Passport verifiable credential</p>
         {credentials.map((credential, i) => {
           return (
@@ -195,6 +252,30 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
             const presentationDefinition = JSON.parse(searchParams.presentation_definition);
 
             const vcs = [selectedCredential, vc];
+
+            //  reuse proof for now
+            if (isIncludeENS) {
+              vcs.push({
+                ...vc,
+                credentialSubject: {
+                  ...vc.credentialSubject,
+                  provider: "ENS",
+                  name: ensName,
+                  avatar: ensAvatar,
+                },
+              });
+            }
+
+            if (isIncludeApeCoin) {
+              vcs.push({
+                ...vc,
+                credentialSubject: {
+                  ...vc.credentialSubject,
+                  provider: "ApeCoin",
+                  balance: apeCoinBalance,
+                },
+              });
+            }
 
             const { vp, descriptorMap } = await siop.createVpToken(
               {
