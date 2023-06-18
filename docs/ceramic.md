@@ -1,12 +1,24 @@
 ## How It Works
 
+IdP3 uses the Gitcoin Passport credential as its primary source of credentials. In turn, Gitcoin Passport relies on Ceramic for data storage.
+
 ## UI
 
 ![ceramic-ui](./img/ceramic-ui.png)
 
+## Implementation
+
+### Data fetch
+
+https://github.com/block-base/idp3/blob/main/packages/app/src/app/vc/route.ts
+
+### Create Delegate Verifiable Credential using with Ceramic
+
+https://github.com/block-base/idp3/blob/main/packages/app/src/app/authorize/page.tsx#L197
+
 ## Created Verifiable Credential
 
-### Original Credential from Ceramic Network
+### Original Verifiable Credential from Ceramic Network
 
 ```
 {
@@ -37,7 +49,7 @@
 }
 ```
 
-### Delegate Credential from Web3 Wallet
+### Delegate Verifiable Credential from Web3 Wallet
 
 ```
 {

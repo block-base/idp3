@@ -1,5 +1,7 @@
 ## How It Works
 
+IdP3 has incorporated ApeCoinDAO credentials to demonstrate a broader range of actual use cases.
+
 ## UI
 
 ![apecoin-ui](./img/apecoin-ui.png)

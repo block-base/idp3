@@ -1,5 +1,7 @@
 ## How It Works
 
+IdP3 has incorporated ENS credentials to demonstrate a broader range of actual use cases.
+
 ## UI
 
 ![ens-ui](./img/ens-ui.png)
