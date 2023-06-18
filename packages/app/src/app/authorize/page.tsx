@@ -249,6 +249,7 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
             };
 
             const idToken = await siop.createIdToken({ aud: searchParams.redirect_uri, nonce: searchParams.nonce });
+            console.log(searchParams);
             const presentationDefinition = JSON.parse(searchParams.presentation_definition);
 
             const vcs = [selectedCredential, vc];

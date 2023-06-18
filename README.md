@@ -8,7 +8,7 @@ IdP3 is a fully decentralized solution for authorization, leveraging SIOPv2 and 
 
 ## Demo App
 
-https://idp3.vercel.app/
+https://idp3-demo.vercel.app/
 
 ## Demo Video
 
