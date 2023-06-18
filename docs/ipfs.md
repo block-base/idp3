@@ -1,6 +1,6 @@
 ## How It Works
 
-IdP3 uses the Gitcoin Passport credential as its primary source of credentials. In turn, Gitcoin Passport relies on Ceramic for data storage, and Ceramic itself uses IPFS.
+IdP3 uses the Gitcoin Passport credential as its primary source of credentials. In turn, Gitcoin Passport relies on Ceramic for DID based data storage, and Ceramic itself uses IPFS.
 
 ![overview](./img/overview.png)
 
