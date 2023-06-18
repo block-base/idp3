@@ -44,6 +44,8 @@ https://w3c-ccg.github.io/ethereum-eip712-signature-2021-spec/
 
 We utilize the signature verification algorithm suggested in the above link and generate verifiable presentations in the JSON-LD format.
 
+![!create-delegate-vc](./docs/img/create-delegate-vc.png)
+
 ## How It Build
 
 IdP3 uses the Gitcoin Passport credential as its primary source of credentials. In turn, Gitcoin Passport relies on Ceramic for data storage, and Ceramic itself uses IPFS.
