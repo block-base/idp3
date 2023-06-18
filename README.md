@@ -12,7 +12,7 @@ https://idp3-demo.vercel.app/
 
 ## Demo Video
 
-TBD
+https://youtu.be/4Lh3vHGDXws
 
 ## How It works
 
