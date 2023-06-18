@@ -4,9 +4,6 @@ import { Credential } from "@/types/credential";
 
 export async function GET(request: Request) {
   const gitcoinPassportApiKey = process.env.GITCOIN_PASSPORT_API_KEY;
-  if (!gitcoinPassportApiKey) {
-    throw new Error("gitcoinPassportApiKey not defined");
-  }
   const { searchParams } = new URL(request.url);
   const address = searchParams.get("address");
   if (typeof address !== "string") {
@@ -18,7 +15,7 @@ export async function GET(request: Request) {
       method: "GET",
       headers: {
         accept: "application/json",
-        "X-API-Key": gitcoinPassportApiKey,
+        "X-API-Key": gitcoinPassportApiKey || "",
       },
     }
   ).then((response) => response.json());
