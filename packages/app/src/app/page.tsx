@@ -1,10 +1,21 @@
-import { HomeLayout } from "@/components/Layout";
-import { MoveToAuthorizationDemo } from "@/components/SIOP";
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import { Button } from "@/components/Button";
+import { Layout } from "@/components/Layout";
 
 export default function Page() {
+  const router = useRouter();
   return (
-    <HomeLayout title={"IdP3"} tagLine={"Decentralized Identity Aggregator"} className={"bg-black text-white"}>
-      <MoveToAuthorizationDemo />
-    </HomeLayout>
+    <Layout title={"IdP3"} tagLine={"Decentralized Identity Aggregator"} className={"bg-black text-white"}>
+      <Button
+        onClick={() => {
+          router.push(`${process.env.NEXT_PUBLIC_DEMO_URL}`);
+        }}
+      >
+        Move to Authorization Demo
+      </Button>
+    </Layout>
   );
 }

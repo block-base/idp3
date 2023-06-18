@@ -1,0 +1,19 @@
+{
+  "name": "@idp3/sdk",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc-watch",
+    "build": "tsc",
+    "lint": "eslint '**/*.{js,ts}' --ignore-path ../../.gitignore"
+  },
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "jose": "^4.14.4"
+  },
+  "devDependencies": {
+    "tsc-watch": "^6.0.4"
+  }
+}

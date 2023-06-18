@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { CredentialsContext } from "@/contexts/CredentialsContext";
 
@@ -10,7 +10,7 @@ export interface CredentialsProvider {
 
 export const CredentialsProvider = (props: CredentialsProvider) => {
   const [credentials, setCredentials] = useState<string[]>([]);
-  const value = useMemo(() => ({ credentials, setCredentials }), [credentials]);
-
-  return <CredentialsContext.Provider value={value}>{props.children}</CredentialsContext.Provider>;
+  return (
+    <CredentialsContext.Provider value={{ credentials, setCredentials }}>{props.children}</CredentialsContext.Provider>
+  );
 };

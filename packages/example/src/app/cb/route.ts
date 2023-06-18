@@ -1,13 +1,10 @@
+import { verifyJwtWithDid } from "@idp3/sdk";
 import { NextResponse } from "next/server";
-
-import { verifyIDToken } from "@/lib/verify";
-// import * as jose from "jose";
 
 export async function POST(request: Request) {
   const bodyText = await request.text();
   const params = new URLSearchParams(bodyText);
 
-  // id_tokenを取得
   const idToken = params.get("id_token");
   console.log("idToken", idToken);
 
@@ -16,13 +13,22 @@ export async function POST(request: Request) {
   }
 
   try {
-    await verifyIDToken(idToken);
-    console.log("verified");
+    const isVerified = await verifyJwtWithDid(idToken);
+    console.log("verified", isVerified);
+    // TODO: verify vp token
+
+    return NextResponse.json(
+      { verified: true },
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+        },
+      }
+    );
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return NextResponse.json({ verified: false }, { status: 200 });
   }
-  // TODO: verify vp token
-  // console.log("header", header);
-  return NextResponse.json({ verified: true }, { status: 200 });
 }
