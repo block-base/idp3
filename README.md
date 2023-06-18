@@ -18,6 +18,10 @@ https://youtu.be/4Lh3vHGDXws
 
 IdP3 utilize SIOPv2 and OID4VP for the new way of authorization.
 
+SIOPv2 allows a user's wallet to function as an ID Token Provider in the OpenID Connect flow, while OID4VP facilitates the attachment of user credentials to the ID Token using the user's wallet.
+
+SIOPv2 and OID4VP represent new standards for authorization using Self-Sovereign Identity (SSI). IdP3 is the first product to integrate a web3 wallet with these new standards.
+
 ![overview](./docs/img/overview.png)
 
 ### Difference from Sign In With Ethereum
