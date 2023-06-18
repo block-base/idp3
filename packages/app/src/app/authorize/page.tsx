@@ -86,23 +86,23 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
         <Button
           disabled={!selectedCredential}
           onClick={async () => {
-            if (!walletClient || !siop) {
+            if (!walletClient || !siop || !selectedCredential) {
               return;
             }
             const [address] = await walletClient.getAddresses();
             const issuer = `did:pkh:eip155:1:${address}#controller`;
             const verificationMethod = `${issuer}#controller`;
+            const sub = siop.did;
 
-            // TODO: replace with pairwise did
-            const sub = "did:ion:<identifier>";
+            console.log(selectedCredential);
 
-            // TODO: delegate
             const message = {
               "@context": ["https://www.w3.org/2018/credentials/v1"],
               id: "id", // TODO: create vc id
-              type: ["VerifiableCredential"],
+              type: ["VerifiableCredential", "IdP3DelegatedCredential"],
               issuer,
               credentialSubject: {
+                ...selectedCredential.credentialSubject,
                 id: sub,
               },
             };
@@ -121,7 +121,11 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
                 { name: "issuer", type: "string" },
                 { name: "credentialSubject", type: "CredentialSubject" },
               ],
-              CredentialSubject: [{ name: "id", type: "string" }],
+              CredentialSubject: [
+                { name: "id", type: "string" },
+                { name: "hash", type: "string" },
+                { name: "provider", type: "string" },
+              ],
             };
 
             const signature = await walletClient.signTypedData({
@@ -147,12 +151,10 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
               proof,
             };
 
-            // SIOP
             const idToken = await siop.createIdToken({ aud: searchParams.redirect_uri, nonce: searchParams.nonce });
             const presentationDefinition = JSON.parse(searchParams.presentation_definition);
 
-            // TODO: add selected vc
-            const vcs = [vc];
+            const vcs = [selectedCredential, vc];
 
             const { vp, descriptorMap } = await siop.createVpToken(
               {
