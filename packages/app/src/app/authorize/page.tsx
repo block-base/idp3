@@ -14,6 +14,8 @@ import { useCredentials } from "@/hooks/useCredentials";
 import { useIsWalletConnected } from "@/hooks/useIsWalletConnected";
 import { useSiop } from "@/hooks/useSiop";
 
+export const dynamic = "force-dynamic";
+
 interface SearchParams {
   redirect_uri: string;
   response_mode: string;
@@ -251,7 +253,6 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
             const idToken = await siop.createIdToken({ aud: searchParams.redirect_uri, nonce: searchParams.nonce });
             console.log(searchParams);
             const presentationDefinition = JSON.parse(searchParams.presentation_definition);
-
             const vcs = [selectedCredential, vc];
 
             //  reuse proof for now
