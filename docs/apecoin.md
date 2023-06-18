@@ -4,10 +4,6 @@ IdP3 has incorporated ApeCoinDAO credentials to demonstrate a broader range of a
 
 ![overview](./docs/img/overview.png)
 
-## Benefit
-
-TBD
-
 ## UI
 
 ![apecoin-ui](./img/apecoin-ui.png)

@@ -4,10 +4,6 @@ IdP3 uses the Gitcoin Passport credential as its primary source of credentials. 
 
 ![overview](./docs/img/overview.png)
 
-## Benefit
-
-TBD
-
 ## Implementation
 
 ### Data fetch
