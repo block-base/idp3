@@ -22,6 +22,8 @@ export async function GET(request: Request) {
       },
     }
   ).then((response) => response.json());
-  const data = items.map(({ credential }: { credential: Credential }) => credential);
+  const data = items.map(({ credential }: { credential: Credential }) => {
+    return { platform: "Gitcoin Passport", ...credential };
+  });
   return NextResponse.json(data, { status: 200 });
 }

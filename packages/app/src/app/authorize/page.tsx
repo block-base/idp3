@@ -1,6 +1,8 @@
 "use client";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
+import { useEffect, useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
 import { Button } from "@/components/Button";
@@ -26,6 +28,29 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const { isWalletConnected } = useIsWalletConnected();
   const { credentials, selectedCredential, syncCredentials } = useCredentials();
   const { siop } = useSiop();
+
+  const [ensName, setENSName] = useState("");
+  const [ensAvatar, setENSAvatar] = useState("");
+
+  useEffect(() => {
+    if (!address) {
+      return;
+    }
+    fetchEnsName({ address }).then((name) => {
+      if (!name) {
+        return;
+      }
+      setENSName(name);
+      fetchEnsAvatar({ name }).then((avatar) => {
+        if (!avatar) {
+          return;
+        }
+        setENSAvatar(avatar);
+      });
+    });
+  }, [address]);
+
+  // console.log(address, avatar, name, isSuccess);
 
   return (
     <Layout
@@ -59,6 +84,24 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
           <ConnectButton />
         </div>
       </div>
+      {isWalletConnected && (
+        <div className="w-full mb-4">
+          <h2 className={"text-lg font-bold mb-2"}>Profile</h2>
+          <p className={"text-xs text-blue-400 mb-2"}>* Your profile is fetched from ENS</p>
+          {ensName && (
+            <div className="mb-2">
+              <p className={"text-sm font-medium mb-1"}>Name</p>
+              <p className={"text-xs"}>{ensName}</p>
+            </div>
+          )}
+          {ensAvatar && (
+            <div className="mb-2">
+              <p className={"text-sm font-medium mb-1"}>Avatar</p>
+              <p className={"text-xs"}>{ensAvatar}</p>
+            </div>
+          )}
+        </div>
+      )}
       <div className="w-full mb-4">
         <h2 className={"text-lg font-bold mb-2"}>Available Credentials</h2>
         <p className={"text-xs text-blue-400 mb-2"}>* integrated with Gitcoin Passport verifiable credential</p>

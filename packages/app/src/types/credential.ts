@@ -14,6 +14,7 @@ export interface CredentialSubject {
 }
 
 export interface Credential {
+  platform?: string;
   "@context": string[];
   credentialSubject: CredentialSubject;
   expirationDate: string;

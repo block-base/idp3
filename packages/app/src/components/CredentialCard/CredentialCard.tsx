@@ -27,7 +27,8 @@ export const CredentialCard = (props: CredentialCardProps) => {
         setSelectedCredential(props.credential);
       }}
     >
-      <div className="absolute top-0 left-0 p-2 text-left text-xs">{props.credential.issuer}</div>
+      <div className="absolute top-0 left-0 p-2 text-left text-xs">{props.credential.platform}</div>
+      <div className="absolute top-4 left-0 p-2 text-left text-xs">{props.credential.issuer}</div>
       <div className="absolute bottom-0 right-0 p-2 text-right text-xs">
         {props.credential.credentialSubject.provider}
       </div>
