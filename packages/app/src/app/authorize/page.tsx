@@ -14,8 +14,6 @@ import { useCredentials } from "@/hooks/useCredentials";
 import { useIsWalletConnected } from "@/hooks/useIsWalletConnected";
 import { useSiop } from "@/hooks/useSiop";
 
-export const dynamic = "force-dynamic";
-
 interface SearchParams {
   redirect_uri: string;
   response_mode: string;
@@ -316,3 +314,5 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
     </Layout>
   );
 }
+
+export const dynamic = "force-dynamic";
