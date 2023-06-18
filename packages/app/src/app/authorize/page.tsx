@@ -1,12 +1,13 @@
 "use client";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
 import { Button } from "@/components/Button";
+import { CredentialCard } from "@/components/CredentialCard";
 import { Layout } from "@/components/Layout";
 import { useCredentials } from "@/hooks/useCredentials";
+import { useIsWalletConnected } from "@/hooks/useIsWalletConnected";
 import { useSiop } from "@/hooks/useSiop";
 
 interface SearchParams {
@@ -22,39 +23,68 @@ interface SearchParams {
 export default function Page({ searchParams }: { searchParams: SearchParams }) {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const { credentials, setCredentials } = useCredentials();
+  const { isWalletConnected } = useIsWalletConnected();
+  const { credentials, selectedCredential, syncCredentials } = useCredentials();
   const { siop } = useSiop();
 
-  useEffect(() => {
-    if (!address) {
-      return;
-    }
-    fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/vc?address=${address}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCredentials(data);
-      });
-  }, [address, setCredentials]);
-
   return (
-    <Layout title={"IdP3 Authorization"} tagLine={"Aggregate Your Credential"} className={"bg-white text-black"}>
+    <Layout
+      title={"IdP3 Authorization"}
+      tagLine={"Aggregate Your Credential with SIOPv2 and OID4VP"}
+      className={"bg-white text-black"}
+    >
       <div className="w-full mb-4">
         <h2 className={"text-lg font-bold mb-2"}>Request</h2>
-        <p className={"text-sm"}>{JSON.stringify(searchParams)}</p>
+        <p className={"text-xs text-blue-400 mb-2"}>* Request from demo app - relaying party in the OpenID context</p>
+        {Object.entries(searchParams).map(([key, value]) => {
+          return (
+            <div key={key} className="mb-2">
+              <p className={"text-sm font-medium mb-1"}>{key}</p>
+              <p className={"text-xs"}>{value}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="w-full mb-4">
+        <h2 className={"text-lg font-bold mb-2"}>Pairwise DID</h2>
+        <p className={"text-xs text-blue-400 mb-2"}>
+          * Your one time identifier - ID/VP Token issuer in the OpenID context
+        </p>
+        <div className={"text-xs break-all mb-2"}>{siop && siop.did}</div>
       </div>
       <div className="w-full mb-4">
         <h2 className={"text-lg font-bold mb-2"}>Your Wallet</h2>
+        <p className={"text-xs text-blue-400 mb-2"}>* Your web3 wallet which has verifiable credential</p>
         <div className={"mb-2"}>
           <ConnectButton />
         </div>
       </div>
       <div className="w-full mb-4">
         <h2 className={"text-lg font-bold mb-2"}>Available Credentials</h2>
-        <p className={"text-xs"}>{JSON.stringify(credentials)}</p>
+        <p className={"text-xs text-blue-400 mb-2"}>* integrated with Gitcoin Passport verifiable credential</p>
+        {credentials.map((credential, i) => {
+          return (
+            <div key={i} className={"text-xs mb-4"}>
+              <CredentialCard credential={credential} />
+            </div>
+          );
+        })}
+        <Button
+          disabled={!isWalletConnected}
+          onClick={() => {
+            if (!address) {
+              return;
+            }
+            syncCredentials(address);
+          }}
+        >
+          Sync Credential
+        </Button>
       </div>
       <div className="w-full mb-4">
         <h2 className={"text-lg font-bold mb-2"}>Handle Authorization Request</h2>
         <Button
+          disabled={!selectedCredential}
           onClick={async () => {
             if (!walletClient || !siop) {
               return;

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { Credential } from "@/types/credential";
+
 export async function GET(request: Request) {
   const gitcoinPassportApiKey = process.env.GITCOIN_PASSPORT_API_KEY;
   if (!gitcoinPassportApiKey) {
@@ -20,5 +22,6 @@ export async function GET(request: Request) {
       },
     }
   ).then((response) => response.json());
-  return NextResponse.json(items, { status: 200 });
+  const data = items.map(({ credential }: { credential: Credential }) => credential);
+  return NextResponse.json(data, { status: 200 });
 }
