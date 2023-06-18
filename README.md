@@ -1,6 +1,6 @@
 # idp3
 
-![top](./docs/img/top.png)
+![key](./docs/img/key.png)
 
 ## Description
 
