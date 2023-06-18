@@ -22,7 +22,7 @@ TBD
 
 Sign In With Ethereum (SIWE) requires another signing key, which is not managed by the user. It acts as a middleman in the authentication process, as illustrated in the Auth0 SIWE integration diagram below.
 
-![!siwe](./docs/siwe.png)
+![!siwe](./docs/img/siwe.png)
 
 In contrast, the IdP3 model allows only the user to control the key for creating the ID token.
 
