@@ -8,15 +8,15 @@ IdP with web3 wallet
 
 IdP3 is a fully decentralized solution for authorization, leveraging SIOPv2 and OID4VP. This system empowers users to turn their wallets into Self-Issued ID Token Providers (SIOPs) and attach credentials as Verifiable Presentations.
 
+## Demo App
+
 ## Demo Video
 
 TBD
 
 ## How It works
 
-### Diagram
-
-TBD
+IdP3 utilize SIOPv2 and OID4VP for the new way of authorization.
 
 ### Difference from Sign In With Ethereum
 
