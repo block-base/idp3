@@ -14,6 +14,10 @@ https://idp3-demo.vercel.app/
 
 https://youtu.be/4Lh3vHGDXws
 
+## Picth Deck
+
+https://docs.google.com/presentation/d/1Jf5OZNW5ntlWuqZ7LkeZYcB0TSV6jGz3W7Xl67EhgUA/edit?usp=sharing
+
 ## How It works
 
 IdP3 utilize SIOPv2 and OID4VP for the new way of authorization.

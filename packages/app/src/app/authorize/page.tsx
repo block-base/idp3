@@ -3,7 +3,8 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { fetchEnsAvatar, fetchEnsName } from "@wagmi/core";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
 import { Button } from "@/components/Button";
@@ -18,13 +19,22 @@ interface SearchParams {
   redirect_uri: string;
   response_mode: string;
   nonce: string;
-  className?: string;
   presentation_definition: string;
 }
 
 // TODO: get presentation definition and handle it
 
-export default function Page({ searchParams }: { searchParams: SearchParams }) {
+export default function Page() {
+  const _searchParams = useSearchParams();
+  const searchParams = useMemo<SearchParams>(() => {
+    return {
+      redirect_uri: _searchParams.get("redirect_uri") || "",
+      response_mode: _searchParams.get("response_mode") || "",
+      nonce: _searchParams.get("nonce") || "",
+      presentation_definition: _searchParams.get("presentation_definition") || "",
+    };
+  }, [_searchParams]);
+
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { isWalletConnected } = useIsWalletConnected();
