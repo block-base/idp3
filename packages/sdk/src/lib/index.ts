@@ -1,8 +1,9 @@
 import base64url from "base64url";
 import { randomBytes } from "crypto";
-import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
+import { decodeJwt, decodeProtectedHeader, importJWK, jwtVerify } from "jose";
+import { JSONPath } from "jsonpath-plus";
 
-import { PresentationDefinition } from "../types";
+import { PresentationDefinition, PresentationSubmission, VPToken } from "../types";
 
 export const verifyIdToken = async (idToken: string) => {
   const { kid } = decodeProtectedHeader(idToken);
@@ -16,7 +17,44 @@ export const verifyIdToken = async (idToken: string) => {
 };
 
 // TODO: implement
-export const verifyVpToken = async (vpToken: string) => {
+export const verifyVpToken = async (vpToken: string, presentationSubmission: PresentationSubmission) => {
+  if (presentationSubmission.descriptor_map.format === "jwt_vp_json") {
+    // Verify VP Token
+    const { kid } = decodeProtectedHeader(vpToken);
+    if (!kid) {
+      throw new Error("kid is undefined");
+    }
+    const data = await fetch(`https://dev.uniresolver.io/1.0/identifiers/${kid}`).then((res) => res.json());
+    const jwk = await importJWK(data.didDocument.verificationMethod[0].publicKeyJwk);
+    await jwtVerify(vpToken, jwk);
+  } else if (presentationSubmission.descriptor_map.format === "ldp_vp") {
+    // TODO: Verify VP Token
+    throw new Error("Not implemented");
+  }
+
+  // Get Credential
+  const decodedVPToken = decodeJwt(vpToken) as VPToken;
+  const holderDID = decodedVPToken.iss;
+
+  console.log("debug: " + presentationSubmission.definition_id);
+
+  let delegatableCheckFlag = false;
+
+  presentationSubmission.descriptor_map.path_nested.forEach((path) => {
+    const vc = JSONPath({ path: path.path, json: decodedVPToken })[0];
+    // verify vc
+    if (
+      vc.credentialSubject.id !== holderDID ||
+      (vc.type.includes("IdP3DelegatedCredential") && vc.credentialSubject.id === holderDID)
+    ) {
+      delegatableCheckFlag = !delegatableCheckFlag;
+      console.log("found delegate:" + delegatableCheckFlag);
+    }
+  });
+
+  if (delegatableCheckFlag) {
+    throw new Error("Need delegate credential");
+  }
   return true;
 };
 
