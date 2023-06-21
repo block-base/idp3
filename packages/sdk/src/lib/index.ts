@@ -3,7 +3,26 @@ import { randomBytes } from "crypto";
 import { decodeJwt, decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 import { JSONPath } from "jsonpath-plus";
 
-import { PresentationDefinition, PresentationSubmission, VPToken } from "../types";
+import { PresentationDefinition, PresentationSubmission, VerifiableCredential, VPToken } from "../types";
+
+export const verifyVerifiableCredential = async (vc: string | VerifiableCredential) => {
+  if (typeof vc === "string") {
+    const { kid } = decodeProtectedHeader(vc);
+    if (!kid) {
+      throw new Error("kid is undefined");
+    }
+    const data = await fetch(`https://dev.uniresolver.io/1.0/identifiers/${kid}`).then((res) => res.json());
+    const jwk = await importJWK(data.didDocument.verificationMethod[0].publicKeyJwk);
+    await jwtVerify(vc, jwk);
+  }
+  if (typeof vc === "object") {
+    // TODO: verify json ld
+    if (vc.proof.type === "Ed25519Signature2018") {
+      //
+    }
+  }
+  return true;
+};
 
 export const verifyIdToken = async (idToken: string) => {
   const { kid } = decodeProtectedHeader(idToken);
@@ -19,7 +38,6 @@ export const verifyIdToken = async (idToken: string) => {
 // TODO: implement
 export const verifyVpToken = async (vpToken: string, presentationSubmission: PresentationSubmission) => {
   if (presentationSubmission.descriptor_map.format === "jwt_vp_json") {
-    // Verify VP Token
     const { kid } = decodeProtectedHeader(vpToken);
     if (!kid) {
       throw new Error("kid is undefined");
@@ -42,7 +60,8 @@ export const verifyVpToken = async (vpToken: string, presentationSubmission: Pre
 
   presentationSubmission.descriptor_map.path_nested.forEach((path) => {
     const vc = JSONPath({ path: path.path, json: decodedVPToken })[0];
-    // verify vc
+    // TODO: verify vc
+    // verifyVerifiableCredential(vc);
     if (
       vc.credentialSubject.id !== holderDID ||
       (vc.type.includes("IdP3DelegatedCredential") && vc.credentialSubject.id === holderDID)
