@@ -89,10 +89,12 @@ export class Siop {
     if (!this.privateKeyJwk) throw new Error("privateJwk is not initialized");
     if (!this.did) throw new Error("did is not initialized");
     const signer = LocalSigner.create(this.privateKeyJwk);
+
+    const rootPath = format === "ldp_vp" ? "$" : "$.vp";
     const descriptorMap: DescriptorMap = {
       id: "ID card with constraints",
       format,
-      path: "$",
+      path: `${rootPath}`,
       path_nested: [],
     };
 
@@ -100,12 +102,12 @@ export class Siop {
       if (typeof vc === "string") {
         descriptorMap.path_nested.push({
           format: "jwt_vc_json",
-          path: `$.verifiableCredential[${index}]`,
+          path: `${rootPath}.verifiableCredential[${index}]`,
         });
       } else {
         descriptorMap.path_nested.push({
           format: "ldp_vc",
-          path: `$.verifiableCredential[${index}]`,
+          path: `${rootPath}.verifiableCredential[${index}]`,
         });
       }
     });

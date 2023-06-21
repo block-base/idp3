@@ -1,4 +1,4 @@
-import { verifyIdToken, verifyVpToken } from "@idp3/sdk";
+import { PresentationSubmission, verifyIdToken, verifyVpToken } from "@idp3/sdk";
 import cache from "memory-cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
 
   const idToken = params.get("id_token");
   const vpToken = params.get("vp_token");
+  const presentationSubmission = params.get("presentation_submission");
+  console.log("presentationSubmission", presentationSubmission);
 
   console.log("idToken", idToken);
   if (typeof idToken !== "string") {
@@ -55,10 +57,13 @@ export async function POST(request: NextRequest) {
   }
 
   console.log("vpToken", vpToken);
-  if (typeof vpToken !== "string") {
+  if (typeof vpToken !== "string" || typeof presentationSubmission !== "string") {
     throw new Error("vpToken type is invalid");
   } else {
-    const isVpTokenVerified = await verifyVpToken(vpToken);
+    const isVpTokenVerified = await verifyVpToken(
+      vpToken,
+      JSON.parse(presentationSubmission) as PresentationSubmission
+    );
     console.log("isVpTokenVerified", isVpTokenVerified);
     if (!isVpTokenVerified) {
       throw new Error("vpToken is invalid");
